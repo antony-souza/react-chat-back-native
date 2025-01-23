@@ -1,13 +1,24 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseInterceptors,
+} from '@nestjs/common';
 import { GroupService } from './group.service';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
-@Controller('group')
+@Controller('/group')
 export class GroupController {
   constructor(private readonly groupService: GroupService) {}
 
-  @Post()
+  @Post('/create')
+  @UseInterceptors(FileInterceptor(''))
   create(@Body() createGroupDto: CreateGroupDto) {
     return this.groupService.create(createGroupDto);
   }

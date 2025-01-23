@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ChatModule } from './modules/chat/chat.module';
 import { UsersModule } from './modules/users/users.module';
 import { WebsocketGateway } from './websocket/websocket.gateway';
+import { GroupModule } from './modules/group/group.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { WebsocketGateway } from './websocket/websocket.gateway';
     MongooseModule.forRoot(process.env.MONGO_URL as string),
     ChatModule,
     UsersModule,
+    GroupModule,
   ],
   controllers: [],
   providers: [WebsocketGateway],

@@ -1,11 +1,28 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
+import { GroupRepository } from './group.repository';
 
 @Injectable()
 export class GroupService {
-  create(createGroupDto: CreateGroupDto) {
-    return 'This action adds a new group';
+  constructor(private readonly groupRepository: GroupRepository) {}
+
+  async create(createGroupDto: CreateGroupDto) {
+    const checkGroup = await this.groupRepository.findByName(
+      createGroupDto.name,
+    );
+
+    if (checkGroup) {
+      throw new ConflictException('Group already exists!');
+    }
+
+    const createGroup = await this.groupRepository.create(createGroupDto);
+
+    if (!createGroup) {
+      throw new ConflictException('Group could not be created!');
+    }
+
+    return createGroup;
   }
 
   findAll() {

@@ -1,10 +1,10 @@
-import { Prop, Schema } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { randomUUID } from 'crypto';
 
 @Schema({ timestamps: true, versionKey: false })
 export class User {
   @Prop({ type: String, default: randomUUID, required: false })
-  _id: string;
+  _id?: string;
 
   @Prop({ type: String, required: true })
   name: string;
@@ -12,9 +12,14 @@ export class User {
   @Prop({ type: String, required: true })
   email: string;
 
-  @Prop({ type: String, required: true })
+  @Prop({ type: String, required: true, select: false })
   password: string;
 
-  @Prop({ type: String, required: true, ref: 'Group' })
-  group: string;
+  @Prop({ type: String, required: false, ref: 'Group' })
+  group?: string;
+
+  @Prop({ type: Boolean, required: false, default: true })
+  enabled?: boolean;
 }
+
+export const UserSchema = SchemaFactory.createForClass(User);
