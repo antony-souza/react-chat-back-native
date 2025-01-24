@@ -11,7 +11,7 @@ interface ISendMessage {
   message: string;
 }
 
-@WebSocketGateway({ cors: true })
+@WebSocketGateway()
 export class WebsocketGateway {
   @WebSocketServer() server: Server;
   private logger: Logger = new Logger('GatewaySocket');
@@ -20,18 +20,21 @@ export class WebsocketGateway {
     this.logger.log(`Client disconnected: ${client.id}`);
   }
 
-  handleConnection(client: Socket): void {
-    this.logger.log(`Client connected: ${client.id}`);
-  }
-
   @SubscribeMessage('joinGroup')
   async handleJoinGroup(client: Socket, groupId: string) {
     if (!groupId) {
       this.logger.error(`Invalid groupId provided by client ${client.id}`);
       return;
     }
+
+    const rooms = Array.from(client.rooms);
+    if (rooms.includes(groupId)) {
+      this.logger.warn(`Client ${client.id} is already in group ${groupId}`);
+      return;
+    }
+
     await client.join(groupId);
-    this.logger.log(`Client ${client.id} joined store ${groupId}`);
+    this.logger.log(`Client ${client.id} joined group ${groupId}`);
   }
 
   @SubscribeMessage('leaveGroup')
