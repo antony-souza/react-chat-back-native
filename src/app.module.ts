@@ -5,6 +5,8 @@ import { ChatModule } from './modules/chat/chat.module';
 import { UsersModule } from './modules/users/users.module';
 import { WebsocketGateway } from './websocket/websocket.gateway';
 import { GroupModule } from './modules/group/group.module';
+import { WebsocketModule } from './websocket/websocket.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -16,6 +18,8 @@ import { GroupModule } from './modules/group/group.module';
     ChatModule,
     UsersModule,
     GroupModule,
+    WebsocketModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [WebsocketGateway],

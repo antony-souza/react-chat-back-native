@@ -1,7 +1,9 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { Group } from './entities/group.entity';
 import { Model } from 'mongoose';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class GroupRepository {
   constructor(
     @InjectModel(Group.name) private readonly groupModel: Model<Group>,

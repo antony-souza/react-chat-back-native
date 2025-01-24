@@ -1,7 +1,9 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './entities/user.entity';
 import { Model } from 'mongoose';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class UserRepository {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<User>,
@@ -12,6 +14,6 @@ export class UserRepository {
   }
 
   async findOneByEmail(email: string) {
-    return await this.userModel.findOne({ email: email });
+    return await this.userModel.findOne({ email: email }).select('+password');
   }
 }

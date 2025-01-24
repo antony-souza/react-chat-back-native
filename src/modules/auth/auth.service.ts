@@ -1,26 +1,33 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { UserRepository } from '../users/user.repository';
 import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
-  }
+  constructor(private readonly userRepository: UserRepository) {}
 
-  findAll() {
-    return `This action returns all auth`;
-  }
+  async authLogin(dto: CreateAuthDto) {
+    const checkUser = await this.userRepository.findOneByEmail(dto.email);
+    if (!checkUser) {
+      throw new NotFoundException('User not found!');
+    }
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
+    if (
+      !checkUser.password ||
+      !(await bcrypt.compare(dto.password, checkUser.password))
+    ) {
+      throw new ConflictException('Password is incorrect');
+    }
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+    return {
+      message: 'Login success!',
+      id: checkUser._id,
+      name: checkUser.name,
+    };
   }
 }

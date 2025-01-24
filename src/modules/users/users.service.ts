@@ -2,7 +2,7 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserRepository } from './user.repository';
-import { createHash } from 'utils/hash-pass';
+import { createHash } from 'src/utils/hash-pass';
 import { User } from './entities/user.entity';
 
 @Injectable()

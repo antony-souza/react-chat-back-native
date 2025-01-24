@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { Logger } from '@nestjs/common';
 import {
   SubscribeMessage,
@@ -53,6 +52,7 @@ export class WebsocketGateway {
     }
 
     this.server.to(groupId).emit('msgGroup', { clientId: client.id, message });
+
     this.logger.log(
       `Client ${client.id} sent message to group ${groupId}: ${message}`,
     );
