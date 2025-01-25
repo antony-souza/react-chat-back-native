@@ -69,7 +69,7 @@ export class WebsocketGateway {
     });
 
     this.logger.log(
-      `Client ${client.id} sent message to group ${groupName}: ${message}`,
+      `Client ${userName} sent message to group ${groupName}: ${message}`,
     );
   }
 }
