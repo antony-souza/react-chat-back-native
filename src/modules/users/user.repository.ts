@@ -18,6 +18,8 @@ export class UserRepository {
   }
 
   async findOneById(id: string) {
-    return await this.userModel.findById(id);
+    return await this.userModel
+      .findById(id)
+      .select('-password -createdAt -updatedAt -enabled');
   }
 }

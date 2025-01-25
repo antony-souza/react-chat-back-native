@@ -4,7 +4,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ChatModule } from './modules/chat/chat.module';
 import { UsersModule } from './modules/users/users.module';
 import { GroupModule } from './modules/group/group.module';
-import { WebsocketModule } from './websocket/websocket.module';
 import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
@@ -17,7 +16,6 @@ import { AuthModule } from './modules/auth/auth.module';
     ChatModule,
     UsersModule,
     GroupModule,
-    WebsocketModule,
     AuthModule,
   ],
   controllers: [],

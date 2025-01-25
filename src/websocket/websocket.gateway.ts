@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import {
   SubscribeMessage,
   WebSocketGateway,
@@ -14,6 +14,7 @@ interface ISendMessage {
   userId: string;
 }
 
+@Injectable()
 @WebSocketGateway({ cors: true })
 export class WebsocketGateway {
   @WebSocketServer() server: Server;
