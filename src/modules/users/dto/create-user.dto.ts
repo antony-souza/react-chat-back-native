@@ -8,6 +8,9 @@ export class CreateUserDto {
   @IsString()
   name: string;
 
+  @IsOptional()
+  imgUrl?: string;
+
   @IsString()
   email: string;
 

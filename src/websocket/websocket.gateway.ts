@@ -7,11 +7,14 @@ import {
 import { Socket, Server } from 'socket.io';
 
 interface ISendMessage {
-  groupId: string;
+  groupName: string;
   message: string;
+  userName: string;
+  userImg: string;
+  userId: string;
 }
 
-@WebSocketGateway()
+@WebSocketGateway({ cors: true })
 export class WebsocketGateway {
   @WebSocketServer() server: Server;
   private logger: Logger = new Logger('GatewaySocket');
@@ -21,43 +24,52 @@ export class WebsocketGateway {
   }
 
   @SubscribeMessage('joinGroup')
-  async handleJoinGroup(client: Socket, groupId: string) {
-    if (!groupId) {
-      this.logger.error(`Invalid groupId provided by client ${client.id}`);
+  async handleJoinGroup(client: Socket, groupName: string) {
+    if (!groupName) {
+      this.logger.error(`Invalid groupName provided by client ${client.id}`);
       return;
     }
 
     const rooms = Array.from(client.rooms);
-    if (rooms.includes(groupId)) {
-      this.logger.warn(`Client ${client.id} is already in group ${groupId}`);
+    if (rooms.includes(groupName)) {
+      this.logger.warn(`Client ${client.id} is already in group ${groupName}`);
       return;
     }
 
-    await client.join(groupId);
-    this.logger.log(`Client ${client.id} joined group ${groupId}`);
+    await client.join(groupName);
+    this.logger.log(`Client ${client.id} joined group ${groupName}`);
   }
 
   @SubscribeMessage('leaveGroup')
-  async handleLeaveGroup(client: Socket, groupId: string) {
-    if (!groupId) {
-      this.logger.error(`Invalid groupId provided by client ${client.id}`);
+  async handleLeaveGroup(client: Socket, groupName: string) {
+    if (!groupName) {
+      this.logger.error(`Invalid groupName provided by client ${client.id}`);
       return;
     }
-    await client.leave(groupId);
-    this.logger.log(`Client ${client.id} left store ${groupId}`);
+    await client.leave(groupName);
+    this.logger.log(`Client ${client.id} left store ${groupName}`);
   }
 
   @SubscribeMessage('sendMessage')
-  sendMessageForGroup(client: Socket, { groupId, message }: ISendMessage) {
-    if (!groupId || !message) {
+  sendMessageForGroup(
+    client: Socket,
+    { groupName, message, userImg, userId, userName }: ISendMessage,
+  ) {
+    if (!groupName || !message) {
       this.logger.error(`Invalid data provided by client ${client.id}`);
       return;
     }
 
-    this.server.to(groupId).emit('msgGroup', { clientId: client.id, message });
+    this.server.to(groupName).emit('msgGroup', {
+      clientId: userId,
+      message: message,
+      userImg: userImg,
+      userId: userId,
+      userName: userName,
+    });
 
     this.logger.log(
-      `Client ${client.id} sent message to group ${groupId}: ${message}`,
+      `Client ${client.id} sent message to group ${groupName}: ${message}`,
     );
   }
 }

@@ -25,9 +25,9 @@ export class AuthService {
     }
 
     return {
-      message: 'Login success!',
       id: checkUser._id,
       name: checkUser.name,
+      userImg: checkUser.imgUrl,
     };
   }
 }

@@ -9,6 +9,9 @@ export class User {
   @Prop({ type: String, required: true })
   name: string;
 
+  @Prop({ type: String, required: false })
+  imgUrl?: string;
+
   @Prop({ type: String, required: true })
   email: string;
 
