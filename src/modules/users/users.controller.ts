@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -18,9 +19,15 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post('/create')
-  @UseInterceptors(FileInterceptor(''))
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  @UseInterceptors(FileInterceptor('imgUrl'))
+  create(
+    @Body() createUserDto: CreateUserDto,
+    @UploadedFile() imgUrl: Express.Multer.File,
+  ) {
+    return this.usersService.create({
+      ...createUserDto,
+      imgUrl: imgUrl,
+    });
   }
 
   @Get()

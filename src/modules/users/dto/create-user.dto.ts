@@ -9,7 +9,7 @@ export class CreateUserDto {
   name: string;
 
   @IsOptional()
-  imgUrl?: string;
+  imgUrl?: Express.Multer.File;
 
   @IsString()
   email: string;
