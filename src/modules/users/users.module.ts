@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './entities/user.entity';
 import { UserRepository } from './user.repository';
 import { WebsocketModule } from 'src/websocket/websocket.module';
+import UploadFileFactoryService from 'src/utils/uploads/upload-file.service';
 
 @Module({
   imports: [
@@ -12,6 +13,6 @@ import { WebsocketModule } from 'src/websocket/websocket.module';
     WebsocketModule,
   ],
   controllers: [UsersController],
-  providers: [UsersService, UserRepository],
+  providers: [UsersService, UserRepository, UploadFileFactoryService],
 })
 export class UsersModule {}
