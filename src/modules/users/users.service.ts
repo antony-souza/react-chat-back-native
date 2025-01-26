@@ -7,8 +7,12 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserRepository } from './user.repository';
 import { createHash } from 'src/utils/hash-pass';
-import { User } from './entities/user.entity';
 import UploadFileFactoryService from 'src/utils/uploads/upload-file.service';
+
+export interface IResponseCreateUser {
+  message: string;
+  statusCode: number;
+}
 
 @Injectable()
 export class UsersService {
@@ -17,7 +21,7 @@ export class UsersService {
     private readonly uploadFactoryService: UploadFileFactoryService,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto): Promise<IResponseCreateUser> {
     const checkUser = await this.userRepository.findOneByEmail(
       createUserDto.email,
     );
@@ -43,7 +47,10 @@ export class UsersService {
       throw new ConflictException('Failure creating user!');
     }
 
-    return createUser;
+    return {
+      message: 'User created successfully!',
+      statusCode: 201,
+    };
   }
 
   findAll() {
