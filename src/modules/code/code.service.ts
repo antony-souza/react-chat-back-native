@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { CreateRecoveryDto } from './dto/create-recovery.dto';
-import { UpdateRecoveryDto } from './dto/update-recovery.dto';
+import { CreateCodeDto } from './dto/create-code.dto';
+import { UpdateCodeDto } from './dto/update-code.dto';
 
 @Injectable()
-export class RecoveryService {
-  create(createRecoveryDto: CreateRecoveryDto) {
+export class CodeService {
+  create(createCodeDto: CreateCodeDto) {
     return 'This action adds a new recovery';
   }
 
@@ -16,7 +16,7 @@ export class RecoveryService {
     return `This action returns a #${id} recovery`;
   }
 
-  update(id: number, updateRecoveryDto: UpdateRecoveryDto) {
+  update(id: number, updateCodeDto: UpdateCodeDto) {
     return `This action updates a #${id} recovery`;
   }
 

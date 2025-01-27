@@ -3,7 +3,6 @@ import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ChatModule } from './modules/chat/chat.module';
 import { UsersModule } from './modules/users/users.module';
-import { GroupModule } from './modules/group/group.module';
 import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
@@ -15,7 +14,6 @@ import { AuthModule } from './modules/auth/auth.module';
     MongooseModule.forRoot(process.env.MONGO_URL as string),
     ChatModule,
     UsersModule,
-    GroupModule,
     AuthModule,
   ],
   controllers: [],

@@ -1,15 +1,33 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseInterceptors,
+  UploadedFile,
+} from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { CreateChatDto } from './dto/create-chat.dto';
 import { UpdateChatDto } from './dto/update-chat.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
-@Controller('chat')
+@Controller('/chat')
 export class ChatController {
   constructor(private readonly chatService: ChatService) {}
 
-  @Post()
-  create(@Body() createChatDto: CreateChatDto) {
-    return this.chatService.create(createChatDto);
+  @Post('/create')
+  @UseInterceptors(FileInterceptor('imgUrl'))
+  create(
+    @Body() createChatDto: CreateChatDto,
+    @UploadedFile() imgUrl: Express.Multer.File,
+  ) {
+    return this.chatService.create({
+      ...createChatDto,
+      imgUrl: imgUrl,
+    });
   }
 
   @Get()
