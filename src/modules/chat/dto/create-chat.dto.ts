@@ -1,7 +1,7 @@
-import { IsString, IsOptional, IsArray, IsUUID } from 'class-validator';
+import { IsString, IsOptional } from 'class-validator';
 
 export class CreateChatDto {
-  @IsUUID()
+  @IsString()
   @IsOptional()
   _id?: string;
 

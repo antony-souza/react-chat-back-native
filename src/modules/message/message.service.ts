@@ -1,15 +1,40 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
+import { MessageRepository } from './message.repository';
 
 @Injectable()
 export class MessageService {
-  create(createMessageDto: CreateMessageDto) {
-    return 'This action adds a new message';
+  constructor(private readonly messageRepository: MessageRepository) {}
+
+  async create(createMessageDto: CreateMessageDto) {
+    const countChatAndUser =
+      await this.messageRepository.countUserByChatIdAndUserId(
+        createMessageDto.chatId,
+        createMessageDto.userId,
+      );
+
+    if (!countChatAndUser || countChatAndUser === 0) {
+      throw new NotFoundException('Chat or user not found');
+    }
+
+    const message = await this.messageRepository.create(createMessageDto);
+
+    if (!message) {
+      throw new Error('Message not created');
+    }
+
+    return message;
   }
 
-  findAll() {
-    return `This action returns all message`;
+  async findAllMessagesByChatId(id: string) {
+    const messages = await this.messageRepository.findByChatId(id);
+
+    if (!messages) {
+      throw new NotFoundException('Messages not found');
+    }
+
+    return messages;
   }
 
   findOne(id: number) {

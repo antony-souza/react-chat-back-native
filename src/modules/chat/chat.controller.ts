@@ -3,11 +3,11 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   UseInterceptors,
   UploadedFile,
+  Put,
 } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { CreateChatDto } from './dto/create-chat.dto';
@@ -30,17 +30,17 @@ export class ChatController {
     });
   }
 
-  @Get()
+  @Get('/all')
   findAll() {
     return this.chatService.findAll();
   }
 
-  @Get(':id')
+  @Get('/one/:id')
   findOne(@Param('id') id: string) {
-    return this.chatService.findOne(+id);
+    return this.chatService.findOne(id);
   }
 
-  @Patch(':id')
+  @Put('/put/:id')
   update(@Param('id') id: string, @Body() updateChatDto: UpdateChatDto) {
     return this.chatService.update(+id, updateChatDto);
   }

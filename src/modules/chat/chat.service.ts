@@ -1,4 +1,8 @@
-import { Injectable, NotImplementedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  NotImplementedException,
+} from '@nestjs/common';
 import { CreateChatDto } from './dto/create-chat.dto';
 import { UpdateChatDto } from './dto/update-chat.dto';
 import { ChatRepository } from './chat.repository';
@@ -30,12 +34,24 @@ export class ChatService {
     return createChat;
   }
 
-  findAll() {
-    return `This action returns all chat`;
+  async findAll() {
+    const chats = await this.chatRepository.findAll();
+
+    if (!chats) {
+      throw new NotFoundException('Falha ao buscar chats');
+    }
+
+    return chats;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} chat`;
+  async findOne(id: string) {
+    const chat = await this.chatRepository.findById(id);
+
+    if (!chat) {
+      throw new NotFoundException('Chat não encontrado');
+    }
+
+    return chat;
   }
 
   update(id: number, updateChatDto: UpdateChatDto) {
