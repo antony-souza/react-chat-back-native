@@ -12,8 +12,8 @@ export class Chat {
   @Prop({ type: String, required: false })
   imgUrl?: string;
 
-  @Prop({ type: [String], required: true })
-  users: string[];
+  @Prop({ type: [String], required: false })
+  users?: string[];
 
   @Prop({ type: [String], required: false, default: [] })
   admins?: string[];

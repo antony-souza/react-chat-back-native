@@ -26,8 +26,7 @@ export class AuthService {
 
     return {
       id: checkUser._id,
-      name: checkUser.name,
-      userImg: checkUser.imgUrl,
+      statusCode: 200,
     };
   }
 }

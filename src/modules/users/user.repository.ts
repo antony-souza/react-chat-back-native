@@ -17,12 +17,6 @@ export class UserRepository {
     return await this.userModel.findOne({ email: email }).select('+password');
   }
 
-  async findOneById(id: string) {
-    return await this.userModel
-      .findById(id)
-      .select('-password -createdAt -updatedAt -enabled');
-  }
-
   async findById(id: string): Promise<User> {
     const user = await this.userModel
       .findById(id)

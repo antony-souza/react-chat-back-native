@@ -13,7 +13,8 @@ export class CreateChatDto {
   name: string;
 
   @IsString({ each: true })
-  users: string[];
+  @IsOptional()
+  users?: string[];
 
   @IsString({ each: true })
   @IsOptional()
