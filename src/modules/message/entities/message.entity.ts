@@ -9,8 +9,14 @@ export class Message {
   @Prop({ type: String, required: true, ref: 'Chat' })
   chatId: string;
 
+  @Prop({ type: String, required: false })
+  chatName?: string;
+
   @Prop({ type: String, required: true, ref: 'User' })
   userId: string;
+
+  @Prop({ type: String, required: false })
+  userName?: string;
 
   @Prop({ type: String, required: false })
   userImgUrl?: string;

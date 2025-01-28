@@ -9,7 +9,15 @@ export class CreateMessageDto {
   chatId: string;
 
   @IsString()
+  @IsOptional()
+  chatName?: string;
+
+  @IsString()
   userId: string;
+
+  @IsString()
+  @IsOptional()
+  userName?: string;
 
   @IsString()
   @IsOptional()
