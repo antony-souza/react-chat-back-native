@@ -58,7 +58,7 @@ export class UsersService {
   }
 
   async findOne(id: string) {
-    const user = await this.userRepository.findOneById(id);
+    const user = await this.userRepository.findById(id);
 
     if (!user) {
       throw new NotFoundException('User not found!');

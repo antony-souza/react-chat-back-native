@@ -1,7 +1,7 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './entities/user.entity';
 import { Model } from 'mongoose';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class UserRepository {
@@ -21,5 +21,17 @@ export class UserRepository {
     return await this.userModel
       .findById(id)
       .select('-password -createdAt -updatedAt -enabled');
+  }
+
+  async findById(id: string): Promise<User> {
+    const user = await this.userModel
+      .findById(id)
+      .select('-password -createdAt -updatedAt -enabled');
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return user;
   }
 }
