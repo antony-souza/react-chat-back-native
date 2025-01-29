@@ -9,7 +9,11 @@ export class User {
   @Prop({ type: String, required: true })
   name: string;
 
-  @Prop({ type: String, required: false })
+  @Prop({
+    type: String,
+    default: 'https://i.imgur.com/Z26a8en.png',
+    required: false,
+  })
   imgUrl?: string;
 
   @Prop({ type: String, required: true })
