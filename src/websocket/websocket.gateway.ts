@@ -74,8 +74,6 @@ export class WebsocketGateway {
         userName: userName,
       });
 
-      console.log(savedMessageDb);
-
       if (!savedMessageDb) {
         throw new ConflictException('Failed to save message');
       }
@@ -91,6 +89,10 @@ export class WebsocketGateway {
       this.logger.log(
         `Client ${userName} sent message to group ${groupName}: ${message}`,
       );
+
+      this.server.emit('newMessage', {
+        groupId: groupId,
+      });
     } catch {
       this.logger.error(
         `Failed to save or send message for client ${client.id}`,
