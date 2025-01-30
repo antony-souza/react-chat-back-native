@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   Injectable,
   NotFoundException,
   NotImplementedException,
@@ -54,8 +55,11 @@ export class ChatService {
   }
 
   async joinChat(chatId: string, users: string[]) {
-    console.log(chatId, users);
     const chat = await this.chatRepository.joinChat(chatId, users);
+
+    if (!chat) {
+      throw new ConflictException('Falha ao adicionar usuário ao chat');
+    }
 
     return chat;
   }

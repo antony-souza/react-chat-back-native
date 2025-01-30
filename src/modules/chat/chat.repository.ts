@@ -1,7 +1,7 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { Chat } from './entities/chat.entity';
 import { Model } from 'mongoose';
-import { ConflictException, NotFoundException } from '@nestjs/common';
+import { ConflictException } from '@nestjs/common';
 
 export class ChatRepository {
   constructor(
@@ -36,12 +36,6 @@ export class ChatRepository {
   }
 
   async joinChat(chatId: string, users: string[]) {
-    const chat = await this.chatModel.findById(chatId);
-
-    if (!chat) {
-      throw new NotFoundException('Chat not found');
-    }
-
     const userExist = await this.chatModel.exists({
       _id: chatId,
       users: { $in: users },
