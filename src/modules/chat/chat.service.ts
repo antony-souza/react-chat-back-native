@@ -4,7 +4,6 @@ import {
   NotImplementedException,
 } from '@nestjs/common';
 import { CreateChatDto } from './dto/create-chat.dto';
-import { UpdateChatDto } from './dto/update-chat.dto';
 import { ChatRepository } from './chat.repository';
 import UploadFileFactoryService from 'src/utils/uploads/upload-file.service';
 
@@ -54,11 +53,10 @@ export class ChatService {
     return chat;
   }
 
-  update(id: number, updateChatDto: UpdateChatDto) {
-    return `This action updates a #${id} chat`;
-  }
+  async joinChat(chatId: string, users: string[]) {
+    console.log(chatId, users);
+    const chat = await this.chatRepository.joinChat(chatId, users);
 
-  remove(id: number) {
-    return `This action removes a #${id} chat`;
+    return chat;
   }
 }

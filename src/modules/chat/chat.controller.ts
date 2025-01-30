@@ -4,14 +4,12 @@ import {
   Post,
   Body,
   Param,
-  Delete,
   UseInterceptors,
   UploadedFile,
   Put,
 } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { CreateChatDto } from './dto/create-chat.dto';
-import { UpdateChatDto } from './dto/update-chat.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('/chat')
@@ -40,13 +38,8 @@ export class ChatController {
     return this.chatService.findOne(id);
   }
 
-  @Put('/put/:id')
-  update(@Param('id') id: string, @Body() updateChatDto: UpdateChatDto) {
-    return this.chatService.update(+id, updateChatDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.chatService.remove(+id);
+  @Put('/join/:id/:users')
+  joinChat(@Param('id') id: string, @Param('users') users: string[]) {
+    return this.chatService.joinChat(id, users);
   }
 }
