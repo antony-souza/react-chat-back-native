@@ -1,7 +1,7 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { Chat } from './entities/chat.entity';
 import { Model } from 'mongoose';
-import { ConflictException } from '@nestjs/common';
+import { ConflictException, NotFoundException } from '@nestjs/common';
 
 export class ChatRepository {
   constructor(
@@ -33,6 +33,30 @@ export class ChatRepository {
         },
       },
     ]);
+  }
+
+  async findChatByUsers(users: string[]): Promise<Chat[]> {
+    const chats: Chat[] = await this.chatModel.aggregate([
+      {
+        $match: {
+          users: { $all: [users] },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          id: '$_id',
+          name: '$name',
+          imgUrl: '$imgUrl',
+        },
+      },
+    ]);
+
+    if (!chats) {
+      throw new NotFoundException('Chats not found');
+    }
+
+    return chats;
   }
 
   async joinChat(chatId: string, users: string[]) {

@@ -42,4 +42,9 @@ export class ChatController {
   joinChat(@Param('id') id: string, @Param('users') users: string[]) {
     return this.chatService.joinChat(id, users);
   }
+
+  @Get('/users/:users')
+  findChatByUsers(@Param('users') users: string[]) {
+    return this.chatService.findChatByUsers(users);
+  }
 }

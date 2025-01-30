@@ -54,6 +54,16 @@ export class ChatService {
     return chat;
   }
 
+  async findChatByUsers(users: string[]) {
+    const chat = await this.chatRepository.findChatByUsers(users);
+
+    if (!chat) {
+      throw new NotFoundException('Chats do usuário não encontrados');
+    }
+
+    return chat;
+  }
+
   async joinChat(chatId: string, users: string[]) {
     const chat = await this.chatRepository.joinChat(chatId, users);
 
