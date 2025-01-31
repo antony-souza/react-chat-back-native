@@ -24,11 +24,13 @@ export class FriendRepository {
   }
 
   async sendFriendRequest(friend: Friend): Promise<Friend> {
-    const existSoliciation = await this.friendModel.findOne({
-      requesterUserId: friend.requesterUserId,
-      friendId: friend.friendId,
-      enabled: true,
-    });
+    const existSoliciation = await this.friendModel
+      .findOne({
+        requesterUserId: friend.requesterUserId,
+        friendId: friend.friendId,
+        enabled: true,
+      })
+      .select('-createdAt -updatedAt -enabled');
 
     if (existSoliciation) {
       throw new ConflictException('Solicitação de amizade já enviada!');
@@ -61,10 +63,33 @@ export class FriendRepository {
     ]);
   }
 
+  async findOneFriendRequest(friendId: string): Promise<Friend> {
+    const friend = await this.friendModel
+      .findOne({
+        friendId: friendId,
+        isAccepted: false,
+        enabled: true,
+      })
+      .select('-createdAt -updatedAt -enabled');
+
+    if (!friend) {
+      throw new NotFoundException('Nenhuma solicitação de amizade encontrada!');
+    }
+
+    return friend;
+  }
+
   async acceptFriendRequest(friendId: string): Promise<Friend> {
-    const acceptedFrint = await this.friendModel.findByIdAndUpdate(friendId, {
-      isAccepted: true,
-    });
+    const acceptedFrint = await this.friendModel
+      .findOneAndUpdate(
+        { friendId: friendId, isAccepted: false },
+        {
+          isAccepted: true,
+          updatedAt: new Date(),
+        },
+        { new: true },
+      )
+      .select('-createdAt -updatedAt -enabled');
 
     if (!acceptedFrint) {
       throw new ConflictException('Falha ao aceitar solicitação de amizade!');

@@ -5,6 +5,7 @@ import {
   UseInterceptors,
   Get,
   Param,
+  Put,
 } from '@nestjs/common';
 import { FriendsService } from './friends.service';
 import { CreateFriendDto } from './dto/create-friend.dto';
@@ -23,5 +24,10 @@ export class FriendsController {
   @Get('/list-all-friend-request/:userId')
   listAllFriendRequest(@Param('userId') userId: string) {
     return this.friendsService.listAllFriendRequest(userId);
+  }
+
+  @Put('/accept-friend-request/:friendId')
+  acceptFriendRequest(@Param('friendId') friendId: string) {
+    return this.friendsService.acceptFriendRequest(friendId);
   }
 }
