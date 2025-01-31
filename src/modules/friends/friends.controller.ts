@@ -1,0 +1,27 @@
+import {
+  Controller,
+  Post,
+  Body,
+  UseInterceptors,
+  Get,
+  Param,
+} from '@nestjs/common';
+import { FriendsService } from './friends.service';
+import { CreateFriendDto } from './dto/create-friend.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+
+@Controller('friends')
+export class FriendsController {
+  constructor(private readonly friendsService: FriendsService) {}
+
+  @Post('/send-friend-request')
+  @UseInterceptors(FileInterceptor(''))
+  create(@Body() createFriendDto: CreateFriendDto) {
+    return this.friendsService.sendFriendRequest(createFriendDto);
+  }
+
+  @Get('/list-all-friend-request/:userId')
+  listAllFriendRequest(@Param('userId') userId: string) {
+    return this.friendsService.listAllFriendRequest(userId);
+  }
+}

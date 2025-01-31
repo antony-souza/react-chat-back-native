@@ -5,6 +5,7 @@ import { ChatModule } from './modules/chat/chat.module';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { MessageModule } from './modules/message/message.module';
+import { FriendsModule } from './modules/friends/friends.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { MessageModule } from './modules/message/message.module';
     UsersModule,
     AuthModule,
     MessageModule,
+    FriendsModule,
   ],
   controllers: [],
   providers: [],
