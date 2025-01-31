@@ -12,14 +12,14 @@ export class FriendsService {
 
   async sendFriendRequest(createFriendDto: CreateFriendDto) {
     const { user, friend } = await this.friendRepository.findInfoUserAndFriend(
-      createFriendDto.userId,
+      createFriendDto.requesterUserId,
       createFriendDto.friendId,
     );
 
     const sendRequest = await this.friendRepository.sendFriendRequest({
       ...createFriendDto,
-      userImg: user.imgUrl,
-      userName: user.name,
+      requesterUserImg: user.imgUrl,
+      requesterUserName: user.name,
       friendName: friend.name,
     });
 

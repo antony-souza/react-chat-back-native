@@ -25,7 +25,7 @@ export class FriendRepository {
 
   async sendFriendRequest(friend: Friend): Promise<Friend> {
     const existSoliciation = await this.friendModel.findOne({
-      userId: friend.userId,
+      requesterUserId: friend.requesterUserId,
       friendId: friend.friendId,
       enabled: true,
     });
@@ -52,9 +52,9 @@ export class FriendRepository {
         $project: {
           _id: 0,
           id: '$_id',
-          userId: '$userId',
-          userName: '$userName',
-          userImg: '$userImg',
+          requesterUserId: '$requesterUserId',
+          requesterUserName: '$requesterUserName',
+          requesterUserImg: '$requesterUserImg',
           isAccepted: '$isAccepted',
         },
       },

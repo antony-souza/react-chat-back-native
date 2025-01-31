@@ -7,13 +7,13 @@ export class Friend {
   _id?: string;
 
   @Prop({ type: String, required: true })
-  userId: string;
+  requesterUserId: string;
 
   @Prop({ type: String, required: false })
-  userName?: string;
+  requesterUserName?: string;
 
   @Prop({ type: String, required: false })
-  userImg?: string;
+  requesterUserImg?: string;
 
   @Prop({ type: String, required: true })
   friendId: string;

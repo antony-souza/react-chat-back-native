@@ -6,15 +6,15 @@ export class CreateFriendDto {
   _id?: string;
 
   @IsString()
-  userId: string;
+  requesterUserId: string;
 
   @IsString()
   @IsOptional()
-  userName?: string;
+  requesterUserImg?: string;
 
   @IsString()
   @IsOptional()
-  userImg?: string;
+  requesterUserName?: string;
 
   @IsString()
   friendId: string;
