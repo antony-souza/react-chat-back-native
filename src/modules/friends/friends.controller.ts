@@ -30,4 +30,9 @@ export class FriendsController {
   acceptFriendRequest(@Param('friendId') friendId: string) {
     return this.friendsService.acceptFriendRequest(friendId);
   }
+
+  @Get('/list-all-friends/:userId')
+  listAllFriends(@Param('userId') userId: string) {
+    return this.friendsService.listAllFriends(userId);
+  }
 }

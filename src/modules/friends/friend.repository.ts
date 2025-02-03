@@ -96,4 +96,63 @@ export class FriendRepository {
     }
     return acceptedFrint;
   }
+
+  async rejectFriendRequest(friendId: string): Promise<Friend> {
+    const rejectedFriend = await this.friendModel
+      .findOneAndUpdate(
+        { friendId: friendId, isAccepted: false },
+        {
+          enabled: false,
+          updatedAt: new Date(),
+        },
+        { new: true },
+      )
+      .select('-createdAt -updatedAt -enabled');
+
+    if (!rejectedFriend) {
+      throw new ConflictException('Falha ao rejeitar solicitação de amizade!');
+    }
+    return rejectedFriend;
+  }
+
+  async searchFriendByName(name: string): Promise<User[]> {
+    return this.userdModel.aggregate([
+      {
+        $match: {
+          name: { $regex: name, $options: 'i' },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          id: '$_id',
+          name: '$name',
+          email: '$email',
+          imgUrl: '$imgUrl',
+        },
+      },
+    ]);
+  }
+
+  async listAllFriends(userId: string): Promise<Friend[]> {
+    return this.friendModel.aggregate([
+      {
+        $match: {
+          friendId: userId,
+          isAccepted: true,
+          enabled: true,
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          id: '$_id',
+          requesterUserId: '$requesterUserId',
+          requesterUserName: '$requesterUserName',
+          requesterUserImg: '$requesterUserImg',
+          isAccepted: '$isAccepted',
+        },
+      },
+    ]);
+  }
 }

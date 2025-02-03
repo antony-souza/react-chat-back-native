@@ -59,4 +59,34 @@ export class FriendsService {
       friend,
     };
   }
+
+  async rejectFriendRequest(friendId: string) {
+    const existSoliciation =
+      await this.friendRepository.findOneFriendRequest(friendId);
+
+    if (!existSoliciation) {
+      throw new NotFoundException('Solicitação de amizade não encontrada!');
+    }
+
+    const friend = await this.friendRepository.rejectFriendRequest(friendId);
+
+    if (!friend) {
+      throw new NotFoundException('Rejeição de amizade falhou!');
+    }
+
+    return {
+      message: `${friend.friendName} rejeitou a solicitação de amizade!`,
+      friend,
+    };
+  }
+
+  async listAllFriends(userId: string) {
+    const list = await this.friendRepository.listAllFriends(userId);
+
+    if (!list) {
+      throw new NotFoundException('Nenhum amigo encontrado!');
+    }
+
+    return list;
+  }
 }
