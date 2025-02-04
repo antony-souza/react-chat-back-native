@@ -9,7 +9,18 @@ export class ChatRepository {
   ) {}
 
   async create(chat: Chat): Promise<Chat> {
-    return this.chatModel.create(chat);
+    const checkPrivateChat = await this.chatModel.countDocuments({
+      private: true,
+      users: { $all: chat.users },
+    });
+
+    if (checkPrivateChat) {
+      throw new ConflictException('Chat already exists');
+    }
+
+    const newChat = await this.chatModel.create(chat);
+
+    return newChat;
   }
 
   async findById(id: string): Promise<Chat> {
@@ -40,6 +51,7 @@ export class ChatRepository {
       {
         $match: {
           users: { $all: [users] },
+          private: false,
         },
       },
       {

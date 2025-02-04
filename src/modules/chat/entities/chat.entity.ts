@@ -12,6 +12,9 @@ export class Chat {
   @Prop({ type: String, required: false })
   imgUrl?: string;
 
+  @Prop({ type: Boolean, required: false, default: false })
+  private?: boolean;
+
   @Prop({ type: [String], required: false })
   users?: string[];
 

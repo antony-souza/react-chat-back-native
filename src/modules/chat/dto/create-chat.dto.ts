@@ -1,4 +1,5 @@
-import { IsString, IsOptional } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsString, IsOptional, IsBoolean } from 'class-validator';
 
 export class CreateChatDto {
   @IsString()
@@ -11,6 +12,11 @@ export class CreateChatDto {
 
   @IsString()
   name: string;
+
+  @IsBoolean()
+  @Transform(({ value }) => value === 'true')
+  @IsOptional()
+  private?: boolean;
 
   @IsString({ each: true })
   @IsOptional()
