@@ -79,10 +79,10 @@ export class FriendRepository {
     return friend;
   }
 
-  async acceptFriendRequest(friendId: string): Promise<Friend> {
+  async acceptFriendRequest(id: string, friendId: string): Promise<Friend> {
     const acceptedFrint = await this.friendModel
       .findOneAndUpdate(
-        { friendId: friendId, isAccepted: false },
+        { _id: id, friendId: friendId, isAccepted: false },
         {
           isAccepted: true,
           updatedAt: new Date(),

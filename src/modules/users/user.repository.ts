@@ -28,4 +28,10 @@ export class UserRepository {
 
     return user;
   }
+
+  async findAllUsers(): Promise<User[]> {
+    return await this.userModel
+      .find()
+      .select('-password -createdAt -updatedAt');
+  }
 }

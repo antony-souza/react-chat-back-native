@@ -26,9 +26,12 @@ export class FriendsController {
     return this.friendsService.listAllFriendRequest(userId);
   }
 
-  @Put('/accept-friend-request/:friendId')
-  acceptFriendRequest(@Param('friendId') friendId: string) {
-    return this.friendsService.acceptFriendRequest(friendId);
+  @Put('/accept-friend-request/:friendId/:id')
+  acceptFriendRequest(
+    @Param('friendId') friendId: string,
+    @Param('id') id: string,
+  ) {
+    return this.friendsService.acceptFriendRequest(id, friendId);
   }
 
   @Get('/list-all-friends/:userId')

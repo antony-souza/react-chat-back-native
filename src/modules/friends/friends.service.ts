@@ -40,7 +40,7 @@ export class FriendsService {
     return list;
   }
 
-  async acceptFriendRequest(friendId: string) {
+  async acceptFriendRequest(id: string, friendId: string) {
     const existSoliciation =
       await this.friendRepository.findOneFriendRequest(friendId);
 
@@ -48,7 +48,10 @@ export class FriendsService {
       throw new NotFoundException('Solicitação de amizade não encontrada!');
     }
 
-    const friend = await this.friendRepository.acceptFriendRequest(friendId);
+    const friend = await this.friendRepository.acceptFriendRequest(
+      id,
+      friendId,
+    );
 
     if (!friend) {
       throw new NotFoundException('Aceitação de amizade falhou!');

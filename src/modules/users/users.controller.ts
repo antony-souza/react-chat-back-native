@@ -30,7 +30,7 @@ export class UsersController {
     });
   }
 
-  @Get()
+  @Get('/all')
   findAll() {
     return this.usersService.findAll();
   }
