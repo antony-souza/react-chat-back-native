@@ -42,6 +42,11 @@ export class FriendsController {
     return this.friendsService.rejectFriendRequest(id, friendId);
   }
 
+  @Put('/remove-friend/:id')
+  removeFriend(@Param('id') id: string) {
+    return this.friendsService.removeFriend(id);
+  }
+
   @Get('/list-all-friends/:userId')
   listAllFriends(@Param('userId') userId: string) {
     return this.friendsService.listAllFriends(userId);

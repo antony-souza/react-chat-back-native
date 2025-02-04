@@ -78,6 +78,14 @@ export class FriendsService {
     };
   }
 
+  async removeFriend(id: string) {
+    await this.friendRepository.removeFriend(id);
+
+    return {
+      message: 'Amizade removida com sucesso!',
+    };
+  }
+
   async listAllFriends(userId: string) {
     const list = await this.friendRepository.listAllFriends(userId);
 

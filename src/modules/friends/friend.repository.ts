@@ -108,6 +108,20 @@ export class FriendRepository {
     }
   }
 
+  async removeFriend(id: string): Promise<void> {
+    const removedFriend = await this.friendModel.updateOne(
+      {
+        _id: id,
+        isAccepted: true,
+      },
+      { enabled: false },
+    );
+
+    if (removedFriend.modifiedCount === 0) {
+      throw new ConflictException('Falha ao remover amigo!');
+    }
+  }
+
   async searchFriendByName(name: string): Promise<User[]> {
     return this.userdModel.aggregate([
       {
