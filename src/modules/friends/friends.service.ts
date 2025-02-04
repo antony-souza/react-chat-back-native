@@ -63,7 +63,7 @@ export class FriendsService {
     };
   }
 
-  async rejectFriendRequest(friendId: string) {
+  async rejectFriendRequest(id: string, friendId: string) {
     const existSoliciation =
       await this.friendRepository.findOneFriendRequest(friendId);
 
@@ -71,15 +71,10 @@ export class FriendsService {
       throw new NotFoundException('Solicitação de amizade não encontrada!');
     }
 
-    const friend = await this.friendRepository.rejectFriendRequest(friendId);
-
-    if (!friend) {
-      throw new NotFoundException('Rejeição de amizade falhou!');
-    }
+    await this.friendRepository.rejectFriendRequest(id, friendId);
 
     return {
-      message: `${friend.friendName} rejeitou a solicitação de amizade!`,
-      friend,
+      message: 'Solicitação de amizade rejeitada!',
     };
   }
 

@@ -97,22 +97,15 @@ export class FriendRepository {
     return acceptedFrint;
   }
 
-  async rejectFriendRequest(friendId: string): Promise<Friend> {
-    const rejectedFriend = await this.friendModel
-      .findOneAndUpdate(
-        { friendId: friendId, isAccepted: false },
-        {
-          enabled: false,
-          updatedAt: new Date(),
-        },
-        { new: true },
-      )
-      .select('-createdAt -updatedAt -enabled');
+  async rejectFriendRequest(id: string, friendId: string): Promise<void> {
+    const rejectedFriend = await this.friendModel.updateOne(
+      { _id: id, friendId: friendId, isAccepted: false },
+      { enabled: false },
+    );
 
     if (!rejectedFriend) {
       throw new ConflictException('Falha ao rejeitar solicitação de amizade!');
     }
-    return rejectedFriend;
   }
 
   async searchFriendByName(name: string): Promise<User[]> {
