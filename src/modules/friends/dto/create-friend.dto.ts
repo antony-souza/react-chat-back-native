@@ -23,6 +23,10 @@ export class CreateFriendDto {
   @IsOptional()
   friendName?: string;
 
+  @IsString()
+  @IsOptional()
+  friendImg?: string;
+
   @IsBoolean()
   @IsOptional()
   isAccepted?: boolean;

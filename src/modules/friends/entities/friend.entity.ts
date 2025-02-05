@@ -21,6 +21,9 @@ export class Friend {
   @Prop({ type: String, required: false })
   friendName?: string;
 
+  @Prop({ type: String, required: false })
+  friendImg?: string;
+
   @Prop({ type: Boolean, required: true, default: false })
   isAccepted?: boolean;
 

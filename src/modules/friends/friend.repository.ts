@@ -145,19 +145,38 @@ export class FriendRepository {
     return this.friendModel.aggregate([
       {
         $match: {
-          friendId: userId,
           isAccepted: true,
           enabled: true,
+          $or: [{ requesterUserId: userId }, { friendId: userId }],
+        },
+      },
+      {
+        $addFields: {
+          friend: {
+            /* Condiciona se o id do usuário logado é igual ao do que criou
+            a solicitação, então retorna o amigo. */
+            $cond: {
+              if: { $eq: ['$requesterUserId', userId] },
+              then: {
+                id: '$friendId',
+                name: '$friendName',
+                image: '$friendImg',
+              },
+              //Se não, retorna o usuário que criou a solicitação.
+              else: {
+                id: '$requesterUserId',
+                name: '$requesterUserName',
+                image: '$requesterUserImg',
+              },
+            },
+          },
         },
       },
       {
         $project: {
           _id: 0,
           id: '$_id',
-          requesterUserId: '$requesterUserId',
-          requesterUserName: '$requesterUserName',
-          requesterUserImg: '$requesterUserImg',
-          isAccepted: '$isAccepted',
+          friend: 1,
         },
       },
     ]);

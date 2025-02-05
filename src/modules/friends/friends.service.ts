@@ -21,6 +21,7 @@ export class FriendsService {
       requesterUserImg: user.imgUrl,
       requesterUserName: user.name,
       friendName: friend.name,
+      friendImg: friend.imgUrl,
     });
 
     if (!sendRequest) {
