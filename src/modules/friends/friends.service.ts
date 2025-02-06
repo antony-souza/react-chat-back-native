@@ -96,4 +96,14 @@ export class FriendsService {
 
     return list;
   }
+
+  async listByName(name: string) {
+    const list = await this.friendRepository.searchFriendByName(name);
+
+    if (!list) {
+      throw new NotFoundException('Nenhum amigo encontrado!');
+    }
+
+    return list;
+  }
 }

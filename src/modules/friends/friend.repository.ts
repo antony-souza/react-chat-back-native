@@ -158,13 +158,15 @@ export class FriendRepository {
             $cond: {
               if: { $eq: ['$requesterUserId', userId] },
               then: {
-                id: '$friendId',
+                id: '$_id',
+                userId: '$friendId',
                 name: '$friendName',
                 image: '$friendImg',
               },
               //Se não, retorna o usuário que criou a solicitação.
               else: {
-                id: '$requesterUserId',
+                id: '$_id',
+                userId: '$requesterUserId',
                 name: '$requesterUserName',
                 image: '$requesterUserImg',
               },
@@ -175,8 +177,10 @@ export class FriendRepository {
       {
         $project: {
           _id: 0,
-          id: '$_id',
-          friend: 1,
+          id: '$friend.id',
+          userId: '$friend.userId',
+          name: '$friend.name',
+          image: '$friend.image',
         },
       },
     ]);
