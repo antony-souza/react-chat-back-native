@@ -45,6 +45,11 @@ export class ChatController {
 
   @Get('/users/:users')
   findChatByUsers(@Param('users') users: string[]) {
-    return this.chatService.findChatByUsers(users);
+    return this.chatService.findGroupsByUser(users);
+  }
+
+  @Get('/private/:users')
+  findPrivateChat(@Param('users') users: string[]) {
+    return this.chatService.findChatByUser(users);
   }
 }

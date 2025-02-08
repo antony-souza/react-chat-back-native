@@ -3,11 +3,13 @@ import { Friend } from './entities/friend.entity';
 import { Model } from 'mongoose';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { User } from '../users/entities/user.entity';
+import { Chat } from '../chat/entities/chat.entity';
 
 export class FriendRepository {
   constructor(
     @InjectModel(Friend.name) private readonly friendModel: Model<Friend>,
     @InjectModel(User.name) private readonly userdModel: Model<User>,
+    @InjectModel(Chat.name) private readonly chatModel: Model<Chat>,
   ) {}
 
   async findInfoUserAndFriend(userId: string, friendId: string) {
@@ -35,6 +37,12 @@ export class FriendRepository {
     if (existSoliciation) {
       throw new ConflictException('Solicitação de amizade já enviada!');
     }
+
+    /* possivel formata,VOLTE AQUIE  VEJA
+    await this.chatModel.create({
+      name: `${friend.requesterUserName} e ${friend.friendName}`,
+      users: [friend.requesterUserId, friend.friendId],
+    }); */
 
     return await this.friendModel.create(friend);
   }
@@ -80,7 +88,7 @@ export class FriendRepository {
   }
 
   async acceptFriendRequest(id: string, friendId: string): Promise<Friend> {
-    const acceptedFrint = await this.friendModel
+    const acceptedFriend = await this.friendModel
       .findOneAndUpdate(
         { _id: id, friendId: friendId, isAccepted: false },
         {
@@ -91,10 +99,11 @@ export class FriendRepository {
       )
       .select('-createdAt -updatedAt -enabled');
 
-    if (!acceptedFrint) {
+    if (!acceptedFriend) {
       throw new ConflictException('Falha ao aceitar solicitação de amizade!');
     }
-    return acceptedFrint;
+
+    return acceptedFriend;
   }
 
   async rejectFriendRequest(id: string, friendId: string): Promise<void> {

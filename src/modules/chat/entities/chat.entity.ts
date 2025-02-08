@@ -9,7 +9,11 @@ export class Chat {
   @Prop({ type: String, required: true })
   name: string;
 
-  @Prop({ type: String, required: false })
+  @Prop({
+    type: String,
+    required: false,
+    default: 'https://i.imgur.com/MKF1AV6.png',
+  })
   imgUrl?: string;
 
   @Prop({ type: Boolean, required: false, default: false })

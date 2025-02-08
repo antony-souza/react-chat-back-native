@@ -54,11 +54,21 @@ export class ChatService {
     return chat;
   }
 
-  async findChatByUsers(users: string[]) {
-    const chat = await this.chatRepository.findChatByUsers(users);
+  async findGroupsByUser(users: string[]) {
+    const chat = await this.chatRepository.findGroupsByUser(users);
 
     if (!chat) {
       throw new NotFoundException('Chats do usuário não encontrados');
+    }
+
+    return chat;
+  }
+
+  async findChatByUser(users: string[]) {
+    const chat = await this.chatRepository.findChatByUser(users);
+
+    if (!chat) {
+      throw new NotFoundException('Chat privado não encontrado');
     }
 
     return chat;

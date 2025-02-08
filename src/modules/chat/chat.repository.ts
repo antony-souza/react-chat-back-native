@@ -9,18 +9,7 @@ export class ChatRepository {
   ) {}
 
   async create(chat: Chat): Promise<Chat> {
-    const checkPrivateChat = await this.chatModel.countDocuments({
-      private: true,
-      users: { $all: chat.users },
-    });
-
-    if (checkPrivateChat) {
-      throw new ConflictException('Chat already exists');
-    }
-
-    const newChat = await this.chatModel.create(chat);
-
-    return newChat;
+    return await this.chatModel.create(chat);
   }
 
   async findById(id: string): Promise<Chat> {
@@ -46,12 +35,37 @@ export class ChatRepository {
     ]);
   }
 
-  async findChatByUsers(users: string[]): Promise<Chat[]> {
+  async findGroupsByUser(users: string[]): Promise<Chat[]> {
     const chats: Chat[] = await this.chatModel.aggregate([
       {
         $match: {
           users: { $all: [users] },
           private: false,
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          id: '$_id',
+          name: '$name',
+          imgUrl: '$imgUrl',
+        },
+      },
+    ]);
+
+    if (!chats) {
+      throw new NotFoundException('Chats not found');
+    }
+
+    return chats;
+  }
+
+  async findChatByUser(users: string[]): Promise<Chat[]> {
+    const chats: Chat[] = await this.chatModel.aggregate([
+      {
+        $match: {
+          users: { $all: [users] },
+          private: true,
         },
       },
       {
