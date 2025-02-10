@@ -38,12 +38,6 @@ export class FriendRepository {
       throw new ConflictException('Solicitação de amizade já enviada!');
     }
 
-    /* possivel formata,VOLTE AQUIE  VEJA
-    await this.chatModel.create({
-      name: `${friend.requesterUserName} e ${friend.friendName}`,
-      users: [friend.requesterUserId, friend.friendId],
-    }); */
-
     return await this.friendModel.create(friend);
   }
 
@@ -101,6 +95,21 @@ export class FriendRepository {
 
     if (!acceptedFriend) {
       throw new ConflictException('Falha ao aceitar solicitação de amizade!');
+    }
+
+    const requestFristName = acceptedFriend.requesterUserName?.split(' ')[0];
+    const friendFristName = acceptedFriend.friendName?.split(' ')[0];
+
+    const chat = await this.chatModel.create({
+      name: `${requestFristName} e ${friendFristName}`,
+      users: [acceptedFriend.requesterUserId, acceptedFriend.friendId],
+      private: true,
+    });
+
+    if (!chat) {
+      throw new ConflictException(
+        'Falha ao criar chat na aceitação de amizade!',
+      );
     }
 
     return acceptedFriend;
