@@ -127,6 +127,14 @@ export class FriendRepository {
   }
 
   async removeFriend(id: string): Promise<void> {
+    const searchFriend = await this.friendModel
+      .findById(id)
+      .select('-createdAt -updatedAt');
+
+    if (!searchFriend) {
+      throw new NotFoundException('Amigo não encontrado! - removeFriend');
+    }
+
     const removedFriend = await this.friendModel.updateOne(
       {
         _id: id,
@@ -137,6 +145,18 @@ export class FriendRepository {
 
     if (removedFriend.modifiedCount === 0) {
       throw new ConflictException('Falha ao remover amigo!');
+    }
+
+    const chatDisabled = await this.chatModel.updateOne(
+      {
+        users: { $all: [searchFriend.requesterUserId, searchFriend.friendId] },
+        private: true,
+      },
+      { enabled: false },
+    );
+
+    if (chatDisabled.modifiedCount === 0) {
+      throw new ConflictException('Falha ao desativar chat!');
     }
   }
 

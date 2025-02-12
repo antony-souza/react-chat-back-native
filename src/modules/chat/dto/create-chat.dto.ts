@@ -25,4 +25,9 @@ export class CreateChatDto {
   @IsString({ each: true })
   @IsOptional()
   admins?: string[];
+
+  @IsBoolean()
+  @Transform(({ value }) => value === 'true')
+  @IsOptional()
+  enabled?: boolean;
 }

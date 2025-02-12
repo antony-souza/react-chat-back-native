@@ -66,6 +66,7 @@ export class ChatRepository {
         $match: {
           users: { $all: [users] },
           private: true,
+          enabled: true,
         },
       },
       {

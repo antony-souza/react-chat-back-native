@@ -19,6 +19,9 @@ export class Chat {
   @Prop({ type: Boolean, required: false, default: false })
   private?: boolean;
 
+  @Prop({ type: Boolean, required: false, default: true })
+  enabled?: boolean;
+
   @Prop({ type: [String], required: false })
   users?: string[];
 
