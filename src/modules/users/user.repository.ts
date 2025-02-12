@@ -2,7 +2,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User } from './entities/user.entity';
 import { Model } from 'mongoose';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserRepository {
@@ -36,19 +35,19 @@ export class UserRepository {
       .select('-password -createdAt -updatedAt');
   }
 
-  async update(id: string, dto: UpdateUserDto): Promise<User> {
+  async update(entity: Partial<User>): Promise<User> {
     const user = await this.userModel
       .findByIdAndUpdate(
-        id,
+        entity._id,
         {
-          ...dto,
+          ...entity,
           updatedAt: new Date(),
         },
         {
           new: true,
         },
       )
-      .select('-password -createdAt -updatedAt -enabled');
+      .select('-password -createdAt -enabled');
 
     if (!user) {
       throw new NotFoundException('User not found');

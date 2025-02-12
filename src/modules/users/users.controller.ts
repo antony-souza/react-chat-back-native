@@ -40,9 +40,17 @@ export class UsersController {
     return this.usersService.findOne(id);
   }
 
-  @Put('/update/:id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(id, updateUserDto);
+  @Put('/update')
+  @UseInterceptors(FileInterceptor('imgUrl'))
+  update(
+    @Body() updateUserDto: UpdateUserDto,
+    @UploadedFile() imgUrl: Express.Multer.File,
+  ) {
+    console.log(updateUserDto);
+    return this.usersService.update({
+      ...updateUserDto,
+      imgUrl: imgUrl,
+    });
   }
 
   @Delete(':id')

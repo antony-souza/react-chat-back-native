@@ -67,8 +67,16 @@ export class UsersService {
     return user;
   }
 
-  update(id: string, updateUserDto: UpdateUserDto) {
-    return this.userRepository.update(id, updateUserDto);
+  async update(updateUserDto: UpdateUserDto) {
+    let imgUrl: string | undefined;
+
+    if (updateUserDto.imgUrl) {
+      imgUrl = await this.uploadFactoryService.upload(updateUserDto.imgUrl);
+    }
+    return await this.userRepository.update({
+      ...updateUserDto,
+      imgUrl: imgUrl,
+    });
   }
 
   remove(id: number) {
