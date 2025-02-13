@@ -30,7 +30,6 @@ export class ChatService {
     if (!createChat) {
       throw new NotImplementedException('Falha ao criar chat');
     }
-
     return createChat;
   }
 

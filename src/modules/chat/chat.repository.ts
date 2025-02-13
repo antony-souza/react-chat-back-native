@@ -2,10 +2,12 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Chat } from './entities/chat.entity';
 import { Model } from 'mongoose';
 import { ConflictException, NotFoundException } from '@nestjs/common';
+import { User } from '../users/entities/user.entity';
 
 export class ChatRepository {
   constructor(
     @InjectModel(Chat.name) private readonly chatModel: Model<Chat>,
+    @InjectModel(User.name) private readonly userModel: Model<User>,
   ) {}
 
   async create(chat: Chat): Promise<Chat> {

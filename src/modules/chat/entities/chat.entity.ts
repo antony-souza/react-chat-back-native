@@ -25,7 +25,7 @@ export class Chat {
   @Prop({ type: [String], required: false })
   users?: string[];
 
-  @Prop({ type: [String], required: false, default: [] })
+  @Prop({ type: [String], required: false })
   admins?: string[];
 }
 
