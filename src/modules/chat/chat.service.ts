@@ -25,6 +25,8 @@ export class ChatService {
     const createChat = await this.chatRepository.create({
       ...createChatDto,
       imgUrl: imgUrl,
+      users: createChatDto.users,
+      admins: createChatDto.admins,
     });
 
     if (!createChat) {
@@ -78,6 +80,16 @@ export class ChatService {
 
     if (!chat) {
       throw new ConflictException('Falha ao adicionar usuário ao chat');
+    }
+
+    return chat;
+  }
+
+  async getInfoChatAndUser(chatId: string) {
+    const chat = await this.chatRepository.getInfomationChatAndMembers(chatId);
+
+    if (!chat) {
+      throw new NotFoundException('Chat não encontrado');
     }
 
     return chat;

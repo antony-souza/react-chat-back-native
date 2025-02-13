@@ -52,4 +52,9 @@ export class ChatController {
   findPrivateChat(@Param('users') users: string[]) {
     return this.chatService.findChatByUser(users);
   }
+
+  @Get('/infochat/:id')
+  findChatInfo(@Param('id') id: string) {
+    return this.chatService.getInfoChatAndUser(id);
+  }
 }

@@ -106,4 +106,45 @@ export class ChatRepository {
 
     return addUserToChat;
   }
+
+  async getInfomationChatAndMembers(chatId: string): Promise<Chat[]> {
+    const chat: Chat[] = await this.chatModel.aggregate([
+      {
+        $match: {
+          _id: chatId,
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'users',
+          foreignField: '_id',
+          as: 'usersData',
+        },
+      },
+      {
+        $unwind: {
+          path: '$usersData',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          chatId: '$_id',
+          chatName: '$name',
+          chatImgUrl: '$imgUrl',
+          userId: '$usersData._id',
+          userName: '$usersData.name',
+          userImgUrl: '$usersData.imgUrl',
+        },
+      },
+    ]);
+
+    if (!chat) {
+      throw new NotFoundException('Chat not found');
+    }
+
+    return chat;
+  }
 }
