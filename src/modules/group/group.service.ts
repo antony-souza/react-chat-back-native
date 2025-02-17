@@ -4,7 +4,6 @@ import {
   NotFoundException,
   NotImplementedException,
 } from '@nestjs/common';
-
 import UploadFileFactoryService from 'src/utils/uploads/upload-file.service';
 import { GroupRepository } from './group.repository';
 import { CreateGroupDto } from './dto/create-group.dto';
@@ -61,16 +60,6 @@ export class GroupService {
 
     if (!chat) {
       throw new NotFoundException('Chats do usuário não encontrados');
-    }
-
-    return chat;
-  }
-
-  async findPrivateFriendChat(users: string[]) {
-    const chat = await this.groupRepository.findPrivateFriendChat(users);
-
-    if (!chat) {
-      throw new NotFoundException('Chat privado não encontrado');
     }
 
     return chat;

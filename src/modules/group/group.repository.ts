@@ -72,32 +72,6 @@ export class GroupRepository {
     return chats;
   }
 
-  async findPrivateFriendChat(users: string[]): Promise<Group[]> {
-    const chats: Group[] = await this.groupModel.aggregate([
-      {
-        $match: {
-          users: { $all: [users] },
-          private: true,
-          enabled: true,
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          id: '$_id',
-          name: '$name',
-          imgUrl: '$imgUrl',
-        },
-      },
-    ]);
-
-    if (!chats) {
-      throw new NotFoundException('Chats not found');
-    }
-
-    return chats;
-  }
-
   async joinChat(chatId: string, users: string[]) {
     const userExist = await this.groupModel.exists({
       _id: chatId,

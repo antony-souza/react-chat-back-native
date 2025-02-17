@@ -48,11 +48,6 @@ export class GroupController {
     return this.groupService.findGroupsByUser(users);
   }
 
-  @Get('/private/:users')
-  findPrivateFriendChat(@Param('users') users: string[]) {
-    return this.groupService.findPrivateFriendChat(users);
-  }
-
   @Get('/infochat/:id')
   findChatInfo(@Param('id') id: string) {
     return this.groupService.getInfoChatAndUser(id);

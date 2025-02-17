@@ -3,13 +3,14 @@ import { Friend } from './entities/friend.entity';
 import { Model } from 'mongoose';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { User } from '../users/entities/user.entity';
-import { Group } from '../group/entities/group.entity';
+import { Friendschat } from '../friendschat/entities/friendschat.entity';
 
 export class FriendRepository {
   constructor(
     @InjectModel(Friend.name) private readonly friendModel: Model<Friend>,
     @InjectModel(User.name) private readonly userdModel: Model<User>,
-    @InjectModel(Group.name) private readonly groupModel: Model<Group>,
+    @InjectModel(Friendschat.name)
+    private readonly friendsChatModel: Model<Friendschat>,
   ) {}
 
   async findInfoUserAndFriend(userId: string, friendId: string) {
@@ -97,13 +98,13 @@ export class FriendRepository {
       throw new ConflictException('Falha ao aceitar solicitação de amizade!');
     }
 
-    const requestFristName = acceptedFriend.requesterUserName?.split(' ')[0];
-    const friendFristName = acceptedFriend.friendName?.split(' ')[0];
-
-    const chat = await this.groupModel.create({
-      name: `${requestFristName} e ${friendFristName}`,
-      users: [acceptedFriend.requesterUserId, acceptedFriend.friendId],
-      private: true,
+    const chat = await this.friendsChatModel.create({
+      userIdOne: acceptedFriend.requesterUserId,
+      userNameOne: acceptedFriend.requesterUserName,
+      userImgOne: acceptedFriend.requesterUserImg,
+      userIdTwo: acceptedFriend.friendId,
+      userNameTwo: acceptedFriend.friendName,
+      userImgTwo: acceptedFriend.friendImg,
     });
 
     if (!chat) {
@@ -147,16 +148,17 @@ export class FriendRepository {
       throw new ConflictException('Falha ao remover amigo!');
     }
 
-    const chatDisabled = await this.groupModel.updateOne(
+    const chatDisabled = await this.friendsChatModel.updateOne(
       {
-        users: { $all: [searchFriend.requesterUserId, searchFriend.friendId] },
-        private: true,
+        userIdOne: searchFriend.requesterUserId,
+        userIdTwo: searchFriend.friendId,
+        enabled: true,
       },
       { enabled: false },
     );
 
     if (chatDisabled.modifiedCount === 0) {
-      throw new ConflictException('Falha ao desativar chat!');
+      throw new ConflictException('Falha ao desativar chat com amuigo');
     }
   }
 
