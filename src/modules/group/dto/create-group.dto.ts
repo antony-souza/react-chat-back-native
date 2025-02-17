@@ -1,7 +1,7 @@
 import { Transform } from 'class-transformer';
 import { IsString, IsOptional, IsBoolean } from 'class-validator';
 
-export class CreateChatDto {
+export class CreateGroupDto {
   @IsString()
   @IsOptional()
   _id?: string;

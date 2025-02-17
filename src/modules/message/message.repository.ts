@@ -1,20 +1,20 @@
 import { Model } from 'mongoose';
 import { Message } from './entities/message.entity';
 import { InjectModel } from '@nestjs/mongoose';
-import { Chat } from '../chat/entities/chat.entity';
 import { NotFoundException } from '@nestjs/common';
 import { User } from '../users/entities/user.entity';
+import { Group } from '../group/entities/group.entity';
 
 export class MessageRepository {
   constructor(
     @InjectModel(Message.name) private readonly messageModel: Model<Message>,
     @InjectModel(User.name) private readonly userModel: Model<User>,
-    @InjectModel(Chat.name) private readonly chatModel: Model<Chat>,
+    @InjectModel(Group.name) private readonly groupModel: Model<Group>,
   ) {}
 
   async checkChatAndUser(chatId: string, userId: string) {
     const [chat, user] = await Promise.all([
-      this.chatModel.findById(chatId),
+      this.groupModel.findById(chatId),
       this.userModel.findById(userId),
     ]);
 

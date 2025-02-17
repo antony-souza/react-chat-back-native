@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { randomUUID } from 'crypto';
 
 @Schema({ timestamps: true, versionKey: false })
-export class Chat {
+export class Group {
   @Prop({ type: String, required: false, default: randomUUID })
   _id?: string;
 
@@ -25,14 +25,8 @@ export class Chat {
   @Prop({ type: [String], required: false })
   users?: string[];
 
-  /*   @Prop({ type: [String], required: false })
-  usersName?: string[];
-
-  @Prop({ type: [String], required: false })
-  usersImgs?: string[]; */
-
   @Prop({ type: [String], required: false })
   admins?: string[];
 }
 
-export const ChatSchema = SchemaFactory.createForClass(Chat);
+export const GroupSchema = SchemaFactory.createForClass(Group);

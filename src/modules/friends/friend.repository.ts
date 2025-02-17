@@ -3,13 +3,13 @@ import { Friend } from './entities/friend.entity';
 import { Model } from 'mongoose';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { User } from '../users/entities/user.entity';
-import { Chat } from '../chat/entities/chat.entity';
+import { Group } from '../group/entities/group.entity';
 
 export class FriendRepository {
   constructor(
     @InjectModel(Friend.name) private readonly friendModel: Model<Friend>,
     @InjectModel(User.name) private readonly userdModel: Model<User>,
-    @InjectModel(Chat.name) private readonly chatModel: Model<Chat>,
+    @InjectModel(Group.name) private readonly groupModel: Model<Group>,
   ) {}
 
   async findInfoUserAndFriend(userId: string, friendId: string) {
@@ -100,7 +100,7 @@ export class FriendRepository {
     const requestFristName = acceptedFriend.requesterUserName?.split(' ')[0];
     const friendFristName = acceptedFriend.friendName?.split(' ')[0];
 
-    const chat = await this.chatModel.create({
+    const chat = await this.groupModel.create({
       name: `${requestFristName} e ${friendFristName}`,
       users: [acceptedFriend.requesterUserId, acceptedFriend.friendId],
       private: true,
@@ -147,7 +147,7 @@ export class FriendRepository {
       throw new ConflictException('Falha ao remover amigo!');
     }
 
-    const chatDisabled = await this.chatModel.updateOne(
+    const chatDisabled = await this.groupModel.updateOne(
       {
         users: { $all: [searchFriend.requesterUserId, searchFriend.friendId] },
         private: true,

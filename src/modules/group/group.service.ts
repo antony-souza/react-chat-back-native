@@ -4,25 +4,26 @@ import {
   NotFoundException,
   NotImplementedException,
 } from '@nestjs/common';
-import { CreateChatDto } from './dto/create-chat.dto';
-import { ChatRepository } from './chat.repository';
+
 import UploadFileFactoryService from 'src/utils/uploads/upload-file.service';
+import { GroupRepository } from './group.repository';
+import { CreateGroupDto } from './dto/create-group.dto';
 
 @Injectable()
-export class ChatService {
+export class GroupService {
   constructor(
-    private readonly chatRepository: ChatRepository,
+    private readonly groupRepository: GroupRepository,
     private readonly uploadImg: UploadFileFactoryService,
   ) {}
 
-  async create(createChatDto: CreateChatDto) {
+  async create(createChatDto: CreateGroupDto) {
     let imgUrl: string | undefined = '';
 
     if (createChatDto.imgUrl) {
       imgUrl = await this.uploadImg.upload(createChatDto.imgUrl);
     }
 
-    const createChat = await this.chatRepository.create({
+    const createChat = await this.groupRepository.create({
       ...createChatDto,
       imgUrl: imgUrl,
       users: createChatDto.users,
@@ -36,7 +37,7 @@ export class ChatService {
   }
 
   async findAll() {
-    const chats = await this.chatRepository.findAll();
+    const chats = await this.groupRepository.findAll();
 
     if (!chats) {
       throw new NotFoundException('Falha ao buscar chats');
@@ -46,7 +47,7 @@ export class ChatService {
   }
 
   async findOne(id: string) {
-    const chat = await this.chatRepository.findById(id);
+    const chat = await this.groupRepository.findById(id);
 
     if (!chat) {
       throw new NotFoundException('Chat não encontrado');
@@ -56,7 +57,7 @@ export class ChatService {
   }
 
   async findGroupsByUser(users: string[]) {
-    const chat = await this.chatRepository.findGroupsByUser(users);
+    const chat = await this.groupRepository.findGroupsByUser(users);
 
     if (!chat) {
       throw new NotFoundException('Chats do usuário não encontrados');
@@ -66,7 +67,7 @@ export class ChatService {
   }
 
   async findPrivateFriendChat(users: string[]) {
-    const chat = await this.chatRepository.findPrivateFriendChat(users);
+    const chat = await this.groupRepository.findPrivateFriendChat(users);
 
     if (!chat) {
       throw new NotFoundException('Chat privado não encontrado');
@@ -76,7 +77,7 @@ export class ChatService {
   }
 
   async joinChat(chatId: string, users: string[]) {
-    const chat = await this.chatRepository.joinChat(chatId, users);
+    const chat = await this.groupRepository.joinChat(chatId, users);
 
     if (!chat) {
       throw new ConflictException('Falha ao adicionar usuário ao chat');
@@ -86,7 +87,7 @@ export class ChatService {
   }
 
   async getInfoChatAndUser(chatId: string) {
-    const chat = await this.chatRepository.getInfomationChatAndMembers(chatId);
+    const chat = await this.groupRepository.getInfomationChatAndMembers(chatId);
 
     if (!chat) {
       throw new NotFoundException('Chat não encontrado');
@@ -96,7 +97,7 @@ export class ChatService {
   }
 
   async removeUserFromChat(chatId: string, userId: string, adminId: string) {
-    const chat = await this.chatRepository.removeUserFromChat(
+    const chat = await this.groupRepository.removeUserFromChat(
       chatId,
       userId,
       adminId,

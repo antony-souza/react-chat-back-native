@@ -1,31 +1,31 @@
 import { InjectModel } from '@nestjs/mongoose';
-import { Chat } from './entities/chat.entity';
 import { Model } from 'mongoose';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { User } from '../users/entities/user.entity';
+import { Group } from './entities/group.entity';
 
-export class ChatRepository {
+export class GroupRepository {
   constructor(
-    @InjectModel(Chat.name) private readonly chatModel: Model<Chat>,
+    @InjectModel(Group.name) private readonly groupModel: Model<Group>,
     @InjectModel(User.name) private readonly userModel: Model<User>,
   ) {}
 
-  async create(chat: Chat): Promise<Chat> {
+  async create(chat: Group): Promise<Group> {
     const user = await this.userModel.findById(chat.users);
 
     if (!user) {
       throw new NotFoundException('User not found - create chat');
     }
 
-    return await this.chatModel.create({
+    return await this.groupModel.create({
       ...chat,
       usersName: user?.name,
       usersImgs: user?.imgUrl,
     });
   }
 
-  async findById(id: string): Promise<Chat> {
-    const chat = await this.chatModel.findById(id);
+  async findById(id: string): Promise<Group> {
+    const chat = await this.groupModel.findById(id);
 
     if (!chat) {
       throw new Error('Chat not found - RP');
@@ -34,8 +34,8 @@ export class ChatRepository {
     return chat;
   }
 
-  async findAll(): Promise<Chat[]> {
-    return await this.chatModel.aggregate([
+  async findAll(): Promise<Group[]> {
+    return await this.groupModel.aggregate([
       {
         $project: {
           _id: 0,
@@ -47,8 +47,8 @@ export class ChatRepository {
     ]);
   }
 
-  async findGroupsByUser(users: string[]): Promise<Chat[]> {
-    const chats: Chat[] = await this.chatModel.aggregate([
+  async findGroupsByUser(users: string[]): Promise<Group[]> {
+    const chats: Group[] = await this.groupModel.aggregate([
       {
         $match: {
           users: { $all: [users] },
@@ -72,8 +72,8 @@ export class ChatRepository {
     return chats;
   }
 
-  async findPrivateFriendChat(users: string[]): Promise<Chat[]> {
-    const chats: Chat[] = await this.chatModel.aggregate([
+  async findPrivateFriendChat(users: string[]): Promise<Group[]> {
+    const chats: Group[] = await this.groupModel.aggregate([
       {
         $match: {
           users: { $all: [users] },
@@ -99,7 +99,7 @@ export class ChatRepository {
   }
 
   async joinChat(chatId: string, users: string[]) {
-    const userExist = await this.chatModel.exists({
+    const userExist = await this.groupModel.exists({
       _id: chatId,
       users: { $in: users },
     });
@@ -108,7 +108,7 @@ export class ChatRepository {
       throw new ConflictException('User already in chat');
     }
 
-    const addUserToChat = await this.chatModel.findByIdAndUpdate(
+    const addUserToChat = await this.groupModel.findByIdAndUpdate(
       { _id: chatId },
       { $push: { users: users } },
       { new: true },
@@ -117,8 +117,8 @@ export class ChatRepository {
     return addUserToChat;
   }
 
-  async getInfomationChatAndMembers(chatId: string): Promise<Chat[]> {
-    const chat: Chat[] = await this.chatModel.aggregate([
+  async getInfomationChatAndMembers(chatId: string): Promise<Group[]> {
+    const chat: Group[] = await this.groupModel.aggregate([
       {
         $match: {
           _id: chatId,
@@ -160,7 +160,7 @@ export class ChatRepository {
   }
 
   async removeUserFromChat(chatId: string, userId: string, adminId: string) {
-    const userExist = await this.chatModel.exists({
+    const userExist = await this.groupModel.exists({
       _id: chatId,
       admins: { $in: adminId },
       users: { $in: userId },
@@ -170,7 +170,7 @@ export class ChatRepository {
       throw new NotFoundException('User not found in chat');
     }
 
-    const removeUser = await this.chatModel.findByIdAndUpdate(
+    const removeUser = await this.groupModel.findByIdAndUpdate(
       { _id: chatId },
       { $pull: { users: userId } },
       { new: true },

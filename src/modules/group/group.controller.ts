@@ -8,54 +8,54 @@ import {
   UploadedFile,
   Put,
 } from '@nestjs/common';
-import { ChatService } from './chat.service';
-import { CreateChatDto } from './dto/create-chat.dto';
+import { GroupService } from './group.service';
+import { CreateGroupDto } from './dto/create-group.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('/chat')
-export class ChatController {
-  constructor(private readonly chatService: ChatService) {}
+export class GroupController {
+  constructor(private readonly groupService: GroupService) {}
 
   @Post('/create')
   @UseInterceptors(FileInterceptor('imgUrl'))
   create(
-    @Body() createChatDto: CreateChatDto,
+    @Body() dto: CreateGroupDto,
     @UploadedFile() imgUrl: Express.Multer.File,
   ) {
-    return this.chatService.create({
-      ...createChatDto,
+    return this.groupService.create({
+      ...dto,
       imgUrl: imgUrl,
     });
   }
 
   @Get('/all')
   findAll() {
-    return this.chatService.findAll();
+    return this.groupService.findAll();
   }
 
   @Get('/one/:id')
   findOne(@Param('id') id: string) {
-    return this.chatService.findOne(id);
+    return this.groupService.findOne(id);
   }
 
   @Put('/join/:id/:users')
   joinChat(@Param('id') id: string, @Param('users') users: string[]) {
-    return this.chatService.joinChat(id, users);
+    return this.groupService.joinChat(id, users);
   }
 
   @Get('/users/:users')
   findChatByUsers(@Param('users') users: string[]) {
-    return this.chatService.findGroupsByUser(users);
+    return this.groupService.findGroupsByUser(users);
   }
 
   @Get('/private/:users')
   findPrivateFriendChat(@Param('users') users: string[]) {
-    return this.chatService.findPrivateFriendChat(users);
+    return this.groupService.findPrivateFriendChat(users);
   }
 
   @Get('/infochat/:id')
   findChatInfo(@Param('id') id: string) {
-    return this.chatService.getInfoChatAndUser(id);
+    return this.groupService.getInfoChatAndUser(id);
   }
 
   @Put('/remove/:id/:userId/:admin')
@@ -64,6 +64,6 @@ export class ChatController {
     @Param('userId') userId: string,
     @Param('admin') adminId: string,
   ) {
-    return this.chatService.removeUserFromChat(id, userId, adminId);
+    return this.groupService.removeUserFromChat(id, userId, adminId);
   }
 }
