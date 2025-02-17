@@ -137,6 +137,7 @@ export class ChatRepository {
           userId: '$usersData._id',
           userName: '$usersData.name',
           userImgUrl: '$usersData.imgUrl',
+          userEmail: '$usersData.email',
         },
       },
     ]);
@@ -146,5 +147,25 @@ export class ChatRepository {
     }
 
     return chat;
+  }
+
+  async removeUserFromChat(chatId: string, userId: string, adminId: string) {
+    const userExist = await this.chatModel.exists({
+      _id: chatId,
+      admins: { $in: adminId },
+      users: { $in: userId },
+    });
+
+    if (!userExist) {
+      throw new NotFoundException('User not found in chat');
+    }
+
+    const removeUser = await this.chatModel.findByIdAndUpdate(
+      { _id: chatId },
+      { $pull: { users: userId } },
+      { new: true },
+    );
+
+    return removeUser;
   }
 }

@@ -57,4 +57,13 @@ export class ChatController {
   findChatInfo(@Param('id') id: string) {
     return this.chatService.getInfoChatAndUser(id);
   }
+
+  @Put('/remove/:id/:userId/:admin')
+  removeUserFromChat(
+    @Param('id') id: string,
+    @Param('userId') userId: string,
+    @Param('admin') adminId: string,
+  ) {
+    return this.chatService.removeUserFromChat(id, userId, adminId);
+  }
 }

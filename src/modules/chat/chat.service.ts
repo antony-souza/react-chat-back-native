@@ -94,4 +94,18 @@ export class ChatService {
 
     return chat;
   }
+
+  async removeUserFromChat(chatId: string, userId: string, adminId: string) {
+    const chat = await this.chatRepository.removeUserFromChat(
+      chatId,
+      userId,
+      adminId,
+    );
+
+    if (!chat) {
+      throw new ConflictException('Falha ao remover usuário do chat');
+    }
+
+    return chat;
+  }
 }
