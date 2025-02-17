@@ -11,7 +11,17 @@ export class ChatRepository {
   ) {}
 
   async create(chat: Chat): Promise<Chat> {
-    return await this.chatModel.create(chat);
+    const user = await this.userModel.findById(chat.users);
+
+    if (!user) {
+      throw new NotFoundException('User not found - create chat');
+    }
+
+    return await this.chatModel.create({
+      ...chat,
+      usersName: user?.name,
+      usersImgs: user?.imgUrl,
+    });
   }
 
   async findById(id: string): Promise<Chat> {
@@ -62,7 +72,7 @@ export class ChatRepository {
     return chats;
   }
 
-  async findChatByUser(users: string[]): Promise<Chat[]> {
+  async findPrivateFriendChat(users: string[]): Promise<Chat[]> {
     const chats: Chat[] = await this.chatModel.aggregate([
       {
         $match: {

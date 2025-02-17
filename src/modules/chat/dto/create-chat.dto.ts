@@ -22,6 +22,14 @@ export class CreateChatDto {
   @IsOptional()
   users?: string[];
 
+  /*   @IsString({ each: true })
+  @IsOptional()
+  usersName?: string[];
+
+  @IsString({ each: true })
+  @IsOptional()
+  usersImgs?: string[]; */
+
   @IsString({ each: true })
   @IsOptional()
   admins?: string[];

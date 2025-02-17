@@ -49,8 +49,8 @@ export class ChatController {
   }
 
   @Get('/private/:users')
-  findPrivateChat(@Param('users') users: string[]) {
-    return this.chatService.findChatByUser(users);
+  findPrivateFriendChat(@Param('users') users: string[]) {
+    return this.chatService.findPrivateFriendChat(users);
   }
 
   @Get('/infochat/:id')
