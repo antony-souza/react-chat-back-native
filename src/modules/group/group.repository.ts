@@ -53,6 +53,7 @@ export class GroupRepository {
         $match: {
           users: { $all: [users] },
           private: false,
+          enabled: true,
         },
       },
       {
@@ -152,10 +153,9 @@ export class GroupRepository {
       throw new ConflictException('Admin cannot remove himself');
     }
 
-    const removeUser = await this.groupModel.findByIdAndUpdate(
-      chatId,
+    const removeUser = await this.groupModel.updateOne(
+      { _id: chatId },
       { $pull: { users: userId } },
-      { new: true },
     );
 
     if (!removeUser) {
@@ -163,5 +163,24 @@ export class GroupRepository {
     }
 
     return removeUser;
+  }
+
+  async deleteGroup(groupId: string, userId: string) {
+    const checkUserAdmin = await this.groupModel.exists({
+      _id: groupId,
+      admins: { $in: userId },
+    });
+
+    if (!checkUserAdmin) {
+      throw new ConflictException('User is not admin - delete group');
+    }
+
+    const deleteGroup = await this.groupModel.updateOne(
+      { _id: groupId },
+      { $set: { enabled: false } },
+    );
+
+    console.log(deleteGroup);
+    return deleteGroup;
   }
 }

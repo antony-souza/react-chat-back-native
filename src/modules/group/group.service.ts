@@ -98,4 +98,14 @@ export class GroupService {
 
     return chat;
   }
+
+  async deleteGroup(groupId: string, userId: string) {
+    const chat = await this.groupRepository.deleteGroup(groupId, userId);
+
+    if (!chat) {
+      throw new ConflictException('Falha ao deletar chat');
+    }
+
+    return chat;
+  }
 }

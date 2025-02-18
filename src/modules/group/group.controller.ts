@@ -12,7 +12,7 @@ import { GroupService } from './group.service';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-@Controller('/chat')
+@Controller('/group')
 export class GroupController {
   constructor(private readonly groupService: GroupService) {}
 
@@ -60,5 +60,13 @@ export class GroupController {
     @Param('admin') adminId: string,
   ) {
     return this.groupService.removeUserFromChat(id, userId, adminId);
+  }
+
+  @Put('/delete/:groupId/:userId')
+  deleteChat(
+    @Param('groupId') groupId: string,
+    @Param('userId') userId: string,
+  ) {
+    return this.groupService.deleteGroup(groupId, userId);
   }
 }
