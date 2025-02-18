@@ -134,21 +134,33 @@ export class GroupRepository {
   }
 
   async removeUserFromChat(chatId: string, userId: string, adminId: string) {
-    const userExist = await this.groupModel.exists({
-      _id: chatId,
-      admins: { $in: adminId },
-      users: { $in: userId },
-    });
+    const chat = (await this.groupModel.findById(chatId)) as Group;
 
-    if (!userExist) {
+    if (!chat) {
+      throw new NotFoundException('Chat not found');
+    }
+
+    if (!chat.admins?.includes(adminId)) {
+      throw new ConflictException('User is not admin');
+    }
+
+    if (!chat.users?.includes(userId)) {
       throw new NotFoundException('User not found in chat');
     }
 
+    if (adminId === userId) {
+      throw new ConflictException('Admin cannot remove himself');
+    }
+
     const removeUser = await this.groupModel.findByIdAndUpdate(
-      { _id: chatId },
+      chatId,
       { $pull: { users: userId } },
       { new: true },
     );
+
+    if (!removeUser) {
+      throw new ConflictException('Failed to remove user');
+    }
 
     return removeUser;
   }
